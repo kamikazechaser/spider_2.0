@@ -1,4 +1,6 @@
 $(document).ready(() => {
+    $("#notestable").DataTable();
+
     $("input[name='todo']").on("click", (event) => {
         const checkbox = $(`#${event.target.id}`);
 
