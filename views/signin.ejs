@@ -6,9 +6,9 @@
 <body>
 
 <div class="container">
-<div class="col-sm-6 col-sm-offset-3">
+<div class="col-sm-6 col-sm-offset-3 well">
 
-    <h1><span class="fas fa-sign-in-alt"></span> Signin</h1>
+    <h3><span class="fas fa-sign-in-alt"></span> Sign-in</h3>
 
     <% if (message.length > 0) { %>
         <div class="alert alert-danger"><%= message %></div>
@@ -24,12 +24,12 @@
             <input type="password" class="form-control" name="password">
         </div>
 
-        <button type="submit" class="btn btn-warning btn-lg">Login</button>
+        <button type="submit" class="btn btn-primary btn-md">Sign-in</button>
     </form>
 
     <br>
 
-    <h4>Need an account? <a href="/signup">Signup!</a></h4>
+    <h4>Need an account? <a href="/signup">Sign-up</a></h4>
 
 </div>
 </div>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<%- include('header'); -%>
+
+    <body>
+        <div class="container">
+
+            <h1 class="text-center"><span class="fas fa-sticky-note"></span> My Keeper
+            <a id="signout" style="color:#e05454" class="fas fa-sign-out-alt fa-xs"></a></h1><br>
+
+            <div class="row grid-divider">
+                <div class="col-sm-7 well">
+                    <h3><span class="far fa-sticky-note"></span> Create New Note</h3>
+                    <form action="/api/newnote" id="newnote" method="post">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label>Tag</label>
+                            <select class="selectpicker form-control" name="tag">
+                                <option>Personal</option>
+                                <option>Work</option>
+                                <option>Misc.</option>
+                              </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea class="form-control" rows="5" name="content"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                    <br><br>
+
+                    <table id="notestable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>S No.</th>
+                                    <th>Title</th>
+                                    <th>Tag</th>
+                                    <th>Created On</th>
+                                    <th>Updated On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i = 0; i < prefetch.notes.length; i++) { %>
+                                <tr>
+                                    <td><%= i + 1 %></td>
+                                    <td><a target="_blank" href=/getnote/<%= prefetch.notes[i].id %>
+                                    </a><%= prefetch.notes[i].title %></a></td>
+                                    <td><span class="label"><%= prefetch.notes[i].tag %></span></td>
+                                    <td><%= prefetch.moment(prefetch.notes[i].createdAt).format('MMM DD h:mm A') %></td>
+                                    <td><%= prefetch.moment(prefetch.notes[i].updatedAt).format('MMM DD h:mm A') %>
+                                    <span name="deletenote" id=deletenote<%= prefetch.notes[i].id %> class="delete glyphicon glyphicon-remove"></span></td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-4 well">
+                    <h3><span class="fas fa-clipboard-list"></span> Create New To-Do</h3>
+                    <form action="/api/newtodo"  id="newtodo" method="post">
+                        <div class="form-group">
+                            <label>To-Do</label>
+                            <input type="text" class="form-control" name="todo">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                    <br><br>
+                    <% for(let i = 0; i < prefetch.todos.length; i++) { %>
+                        <ul class="list-group checked-list-box">
+                            <% if(prefetch.todos[i].tick === 1) { %>
+                                <li class="list-group-item strike" id=todo<%=prefetch.todos[i].id %>>
+                                <input type="checkbox" checked="true" autocomplete="off" id=todo<%=prefetch.todos[i].id %> name="todo"> <%= prefetch.todos[i].todo %><span name="deletetodo" class="delete glyphicon glyphicon-remove"></span></li>
+                            <% } else { %>
+                                <li class="list-group-item" id=todo<%=prefetch.todos[i].id %>>
+                                <input type="checkbox" autocomplete="off" id=todo<%=prefetch.todos[i].id %> name="todo"> <%= prefetch.todos[i].todo %><span name="deletetodo" class="delete glyphicon glyphicon-remove"></span></li>
+                            <% } %>
+                        </ul>
+                     <% } %>
+                </div>
+            </div>
+
+        </div>
+    </body>
+
+</html>

@@ -4,27 +4,26 @@
  */
 
 exports = module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("User", {
+    const Todo = sequelize.define("Todo", {
         id: {
             autoIncrement: true,
             primaryKey: true,
             type: Sequelize.INTEGER
         },
-        name: {
+        todo: {
             type: Sequelize.STRING,
             notEmpty: true
         },
-        email: {
-            type: Sequelize.STRING,
-            validate: {
-                isEmail: true
-            }
+        tick: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         },
-        password: {
-            type: Sequelize.STRING,
-            allowNull: false
+        userid: {
+            type: Sequelize.INTEGER,
+            notEmpty: true
         }
     });
 
-    return User;
+    return Todo;
 };

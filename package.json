@@ -9,16 +9,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamikazechaser/spider_2.0.git"
-},  
+  },
   "keywords": [
-      "notes"
+    "notes"
   ],
   "author": "Mohamed Sohail <sohailsameja@gmail.com>",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/kamikazechaser/spider_2.0/issues"
   },
-  "homepage": "https://github.com/kamikazechaser/spider_2.0#readme",  
+  "homepage": "https://github.com/kamikazechaser/spider_2.0#readme",
   "dependencies": {
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
@@ -26,6 +26,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "moment": "^2.22.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "sequelize": "^4.35.1",

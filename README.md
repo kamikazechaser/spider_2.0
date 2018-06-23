@@ -1,6 +1,7 @@
 > My Keeper
 
-A personal notes/to-do manager
+A personal notes/to-do manager.
+
 
 **Built With**
 
@@ -9,3 +10,4 @@ A personal notes/to-do manager
 - SQLite
 - EJS
 - Bootstrap 3
+- JQuery

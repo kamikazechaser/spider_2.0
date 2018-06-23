@@ -7,84 +7,80 @@ const bCrypt = require("bcrypt");
 const LocalStrategy = require("passport-local").Strategy;
 
 exports = module.exports = (passport, user) => {
-	const User = user;
+    const User = user;
 
-	passport.serializeUser((user, done) => {
-		done(null, user.id);
-	});
+    passport.serializeUser((user, callback) => {
+        return callback(null, user.id);
+    });
 
-	passport.deserializeUser((id, done) => {
-		User.findById(id).then(user => {
-			if (user) return done(null, user.get());
-			else return done(user.errors, null);
-		});
-	});
+    passport.deserializeUser((id, callback) => {
+        User.findById(id).then(user => {
+            if (user) return callback(null, user.get());
+            else return callback(user.errors, null);
+        });
+    });
 
-	passport.use("local-signup", new LocalStrategy({
-			usernameField: "email",
-			passwordField: "password",
-			passReqToCallback: true
-		},
+    passport.use("local-signup", new LocalStrategy({
+            usernameField: "email",
+            passwordField: "password",
+            passReqToCallback: true
+        },
 
-		function (req, email, password, done) {
+        function (req, email, password, callback) {
 
-			const generateHash = password => {
-				return bCrypt.hashSync(password, 10);
-			};
+            const generateHash = password => {
+                return bCrypt.hashSync(password, 10);
+            };
 
-			User.findOne({where: { email: email }}).then(user => {
-				if (user) {
-					return done(null, false, req.flash("signUpMessage", "E-mail is already in use!"));
-				} else {
-					const hashedPassword = generateHash(password);
-					const dbPush = {
-						email: email,
-						password: hashedPassword,
-						name: req.body.name,
-					};
+            return User.findOne({where: { email: email }}).then(user => {
+                if (user) {
+                    return callback(null, false, req.flash("signupMessage", "E-mail is already in use!"));
+                } else {
+                    const hashedPassword = generateHash(password);
+                    const dbPush = {
+                        email: email,
+                        password: hashedPassword,
+                        name: req.body.name,
+                    };
 
-					User.create(dbPush).then((createdUser, created) => {
-						if (!createdUser) return done(null, false);
-						if (createdUser) return done(null, createdUser);
-					});
-				}
-			}).catch(error => {
-				console.log(error);
+                    return User.create(dbPush).then((createdUser, created) => {
+                        if (!createdUser) return callback(null, false);
+                        if (createdUser) return callback(null, createdUser);
+                    });
+                }
+            }).catch(error => {
+                return callback(null, false, req.flash("signupMessage", "Server error! try again later."));
+            });
+        }
+    ));
 
-				return done(null, false, req.flash("signUpMessage", "Server error! try again later."));
-			});
-		}
-	));
+    passport.use("local-signin", new LocalStrategy({
+                usernameField: "email",
+                passwordField: "password",
+                passReqToCallback: true
+            },
 
-	passport.use("local-signin", new LocalStrategy({
-				usernameField: "email",
-				passwordField: "password",
-				passReqToCallback: true
-			},
+            function (req, email, password, callback) {
+                const validatePassword = (passwordSent, password) => {
+                    return bCrypt.compareSync(password, passwordSent);
+                };
 
-			function (req, email, password, done) {
-				const validatePassword = (passwordSent, password) => {
-					return bCrypt.compareSync(password, passwordSent);
-				};
+                return User.findOne({where: { email: email } }).then(user => {
+                        if (!user) {
+                            return callback(null, false, req.flash("signinMessage", "No such user exists!"));
+                        }
 
-				User.findOne({where: { email: email } }).then(user => {
-						if (!user) {
-							return done(null, false, req.flash("signinMessage", "No such user exists!"));
-						}
+                        if (!validatePassword(user.password, password)) {
+                            return callback(null, false, req.flash("signinMessage", "Incorrect password!"));
+                        }
 
-						if (!validatePassword(user.password, password)) {
-							return done(null, false, req.flash("signinMessage", "Incorrect password!"));
-						}
+                        const userInfo = user.get();
 
-						const userInfo = user.get();
-
-						return done(null, userInfo);
-				}).catch(err => {
-					console.log("Error:", err);
-
-					return done(null, false, req.flash("signinMessage", "Server error! try again later."));
-				});
-			}
-		)
-	);
+                        return callback(null, userInfo);
+                }).catch(err => {
+                    return callback(null, false, req.flash("signinMessage", "Server error! try again later."));
+                });
+            }
+        )
+    );
 };

@@ -27,18 +27,19 @@ app.use(passport.session());
 app.use(flash());
 app.set("views", viewsPath);
 app.set("view engine", "ejs");
+app.use(express.static("public"))
 app.use("/api", apiRouter);
 
 authRouter(app, passport);
 passportStrategy(passport, models.User);
 
 models.sequelize.sync().then(() => {
-	console.log("Connected to SQLite DB!");
+    console.log("Connected to SQLite DB!");
 
-	app.listen(config.server.port, err => {
-		if (!err) console.log(`Connected at http://localhost:${config.server.port}`);
-		else console.log(err);
-	});
+    app.listen(config.server.port, err => {
+        if (!err) console.log(`Connected at http://localhost:${config.server.port}`);
+        else console.log(err);
+    });
 }).catch(err => {
-	console.log(err, "Error: Could not sync DB!");
+    console.log(err, "Error: Could not sync DB!");
 });
